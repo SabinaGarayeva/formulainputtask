@@ -195,17 +195,24 @@ const FormulaInput: React.FC = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Check if event.target is not null
       if (
         suggestionsRef.current &&
-        !suggestionsRef.current.contains(event.target as Node) &&
-        !inputRef.current?.contains(event.target as Node)
+        !(
+          event.target instanceof Node &&
+          suggestionsRef.current.contains(event.target)
+        ) &&
+        !(inputRef.current && inputRef.current.contains(event.target as Node))
       ) {
         setShowSuggestions(false);
       }
 
       if (
         dropdownActiveFor !== null &&
-        !event.target.closest(".token-dropdown")
+        !(
+          event.target instanceof Element &&
+          event.target.closest(".token-dropdown")
+        )
       ) {
         setDropdownActiveFor(null);
       }
@@ -289,17 +296,19 @@ const FormulaInput: React.FC = () => {
               <div className="suggestion-loading">Loading...</div>
             ) : suggestions.length > 0 ? (
               <ul className="suggestions-list">
-                {suggestions.map((suggestion, index) => (
-                  <li
-                    key={suggestion.id}
-                    className={`suggestion-item ${
-                      index === selectedSuggestion ? "selected" : ""
-                    }`}
-                    onClick={() => selectSuggestion(suggestion)}
-                  >
-                    {suggestion.name}
-                  </li>
-                ))}
+                {suggestions.map(
+                  (suggestion: { id: string; name: string }, index: number) => (
+                    <li
+                      key={suggestion.id}
+                      className={`suggestion-item ${
+                        index === selectedSuggestion ? "selected" : ""
+                      }`}
+                      onClick={() => selectSuggestion(suggestion)}
+                    >
+                      {suggestion.name}
+                    </li>
+                  )
+                )}
               </ul>
             ) : (
               <div className="no-suggestions">No suggestions</div>
