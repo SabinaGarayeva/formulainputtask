@@ -70,7 +70,7 @@ const OPERATORS = ["+", "-", "*", "/", "^", "(", ")"];
 
 const FormulaInput: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [cursorPosition, setCursorPosition] = useState<number>(0);
+  const [, setCursorPosition] = useState<number>(0);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [selectedSuggestion, setSelectedSuggestion] = useState<number>(0);
   const [dropdownActiveFor, setDropdownActiveFor] = useState<number | null>(
